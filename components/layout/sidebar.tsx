@@ -7,14 +7,12 @@ import {
   Users,
   Dumbbell,
   UserCog,
-  CreditCard,
 } from "lucide-react";
 
 const menuItems = [
   { title: "Dashboard",   href: "/dashboard",            icon: LayoutDashboard },
   { title: "Alunos",      href: "/dashboard/alunos",     icon: Users           },
   { title: "Professores", href: "/dashboard/professores",icon: Dumbbell        },
-  { title: "Planos",      href: "/dashboard/planos",     icon: CreditCard      },
   { title: "Usuários",    href: "/dashboard/usuarios",   icon: UserCog         },
 ];
 
