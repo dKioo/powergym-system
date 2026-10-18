@@ -1,23 +1,46 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
   Dumbbell,
   ClipboardList,
+  LogOut,
 } from "lucide-react";
 
 const menuItems = [
-  { title: "Dashboard",   href: "/dashboard",            icon: LayoutDashboard },
-  { title: "Alunos",      href: "/dashboard/alunos",     icon: Users           },
-  { title: "Professores", href: "/dashboard/professores",icon: Dumbbell        },
-  { title: "Treinos",    href: "/dashboard/treinos",   icon: ClipboardList,         },
+  { title: "Dashboard",   href: "/dashboard",             icon: LayoutDashboard },
+  { title: "Alunos",      href: "/dashboard/alunos",      icon: Users           },
+  { title: "Professores", href: "/dashboard/professores", icon: Dumbbell        },
+  { title: "Treinos",     href: "/dashboard/treinos",     icon: ClipboardList   },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Quem está logado (nome e perfil)
+  const [user, setUser] = useState<{ nome: string; perfil: string } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => setUser(data))
+      .catch(() => setUser(null));
+  }, []);
+
+  async function handleLogout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.replace("/login");
+    router.refresh();
+  }
+
+  const iniciais = user
+    ? user.nome.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
+    : "";
 
   return (
     <aside className="w-64 h-screen sticky top-0 bg-zinc-950 border-r border-zinc-800 text-white p-5 flex flex-col">
@@ -59,16 +82,28 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Usuário */}
+      {/* Usuário logado + sair */}
       <div className="border-t border-zinc-800 pt-4 mt-4">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-xs font-bold">
-            GS
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-xs font-bold shrink-0">
+            {iniciais}
           </div>
-          <div>
-            <p className="text-sm font-medium leading-none">Gustavo S.</p>
-            <p className="text-zinc-600 text-xs mt-0.5">Administrador</p>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium leading-none truncate">
+              {user?.nome ?? "..."}
+            </p>
+            <p className="text-zinc-600 text-xs mt-0.5">
+              {user ? (user.perfil === "ADMIN" ? "Administrador" : "Aluno") : ""}
+            </p>
           </div>
+          <button
+            type="button"
+            onClick={handleLogout}
+            title="Sair"
+            className="p-2 rounded-lg text-zinc-500 hover:bg-zinc-800 hover:text-red-400 transition"
+          >
+            <LogOut size={16} />
+          </button>
         </div>
       </div>
     </aside>
