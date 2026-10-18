@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from "react";
 import {
+  maskCPF,
+  maskTelefone,
+  cpfCompleto,
+  telefoneCompleto,
+} from "@/lib/masks";
+import {
   Users,
   Plus,
   Search,
@@ -167,8 +173,8 @@ export default function AlunosPage() {
   function openEdit(aluno: Aluno) {
     setForm({
       nome: aluno.nome ?? "",
-      cpf: aluno.cpf ?? "",
-      telefone: aluno.telefone ?? "",
+      cpf: maskCPF(aluno.cpf),
+      telefone: maskTelefone(aluno.telefone),
       email: aluno.email ?? "",
       data_nascimento: aluno.data_nascimento?.slice(0, 10) ?? "",
       objetivo: aluno.objetivo ?? "",
@@ -198,7 +204,15 @@ export default function AlunosPage() {
       );
       return;
     }
+    if (!cpfCompleto(form.cpf)) {
+      showToast("CPF incompleto. Use o formato 000.000.000-00.", "error");
+      return;
+    }
 
+    if (!telefoneCompleto(form.telefone)) {
+      showToast("Telefone incompleto. Use o formato (00)00000-0000.", "error");
+      return;
+    }
     if (!form.plano_id) {
       showToast(
         "Selecione um plano para o aluno.",
@@ -457,7 +471,7 @@ export default function AlunosPage() {
                           </p>
 
                           <p className="text-xs text-zinc-500">
-                            {aluno.cpf}
+                            {maskCPF(aluno.cpf)}
                           </p>
                         </div>
 
@@ -467,7 +481,7 @@ export default function AlunosPage() {
                     {/* Telefone */}
 
                     <td className="px-5 py-4 text-sm text-zinc-400">
-                      {aluno.telefone}
+                      {maskTelefone(aluno.telefone)}
                     </td>
 
                     {/* Objetivo */}
@@ -650,7 +664,7 @@ export default function AlunosPage() {
                   onChange={(v) =>
                     setForm((f) => ({
                       ...f,
-                      cpf: v,
+                      cpf: maskCPF(v),
                     }))
                   }
                   placeholder="000.000.000-00"
@@ -671,10 +685,10 @@ export default function AlunosPage() {
                   onChange={(v) =>
                     setForm((f) => ({
                       ...f,
-                      telefone: v,
+                      telefone: maskTelefone(v),
                     }))
                   }
-                  placeholder="(44) 99999-9999"
+                  placeholder="(44)99999-9999"
                 />
 
               </div>

@@ -6,14 +6,14 @@ import {
   LayoutDashboard,
   Users,
   Dumbbell,
-  UserCog,
+  ClipboardList,
 } from "lucide-react";
 
 const menuItems = [
   { title: "Dashboard",   href: "/dashboard",            icon: LayoutDashboard },
   { title: "Alunos",      href: "/dashboard/alunos",     icon: Users           },
   { title: "Professores", href: "/dashboard/professores",icon: Dumbbell        },
-  { title: "Usuários",    href: "/dashboard/usuarios",   icon: UserCog         },
+  { title: "Treinos",    href: "/dashboard/treinos",   icon: ClipboardList,         },
 ];
 
 export function Sidebar() {

@@ -6,7 +6,6 @@ interface Stats {
   alunos:      number;
   professores: number;
   planos:      number;
-  usuarios:    number;
 }
 
 export default function DashboardPage() {
@@ -24,7 +23,6 @@ export default function DashboardPage() {
     { title: "Alunos",      value: stats?.alunos      },
     { title: "Professores", value: stats?.professores },
     { title: "Planos",      value: stats?.planos      },
-    { title: "Usuários",    value: stats?.usuarios    },
   ];
 
   return (

@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from "react";
 import {
+  maskCPF,
+  maskTelefone,
+  cpfCompleto,
+  telefoneCompleto,
+} from "@/lib/masks";
+import {
   Plus,
   Search,
   Pencil,
@@ -72,7 +78,7 @@ export default function ProfessoresPage() {
   function openEdit(professor: Professor) {
     setForm({
       nome: professor.nome,
-      telefone: professor.telefone,
+      telefone: maskTelefone(professor.telefone),
       email: professor.email,
       especialidade: professor.especialidade,
     });
@@ -84,6 +90,10 @@ export default function ProfessoresPage() {
   async function handleSave() {
     if (!form.nome || !form.telefone) {
       showToast("Preencha nome e telefone.", "error");
+      return;
+    }
+    if (!telefoneCompleto(form.telefone)) {
+      showToast("Telefone incompleto. Use o formato (00)00000-0000.", "error");
       return;
     }
     setSaving(true);
@@ -212,7 +222,7 @@ export default function ProfessoresPage() {
 
                   {/* Telefone */}
                   <td className="px-5 py-4 text-sm text-zinc-400">
-                    {professor.telefone}
+                    {maskTelefone(professor.telefone)}
                   </td>
 
                   {/* Especialidade */}
@@ -296,8 +306,8 @@ export default function ProfessoresPage() {
                 <Label>Telefone *</Label>
                 <Input
                   value={form.telefone}
-                  onChange={(v) => setForm((f) => ({ ...f, telefone: v }))}
-                  placeholder="(44) 99999-9999"
+                  onChange={(v) => setForm((f) => ({ ...f, telefone: maskTelefone(v) }))}
+                  placeholder="(44)99999-9999"
                 />
               </div>
 
